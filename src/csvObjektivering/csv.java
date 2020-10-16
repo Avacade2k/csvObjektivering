@@ -19,9 +19,11 @@ public class csv extends JPanel implements ActionListener {
 	JFrame window = new JFrame("Interface");
 	JLabel info = new JLabel("csvObjektivering");
 	JButton addButton = new JButton("Add row");
-	JButton sortButton = new JButton("Sort");
+	JButton saveButton = new JButton("Save file");
 	DefaultTableModel model;
-	JTable table;
+	static JTable table;
+	static String[][] data;
+	static String[] columnNames = { "OrderDate", "Region", "Rep1", "Rep2", "Item", "Units", "UnitCost", "Total"};
 	
 	csv(){
 		//Constructing interface
@@ -29,26 +31,25 @@ public class csv extends JPanel implements ActionListener {
 		window.add(this);
 		
 		addButton.addActionListener(this);
-		sortButton.addActionListener(this);
+		saveButton.addActionListener(this);
 		
 		//Interface window
 		window.setSize(1000,500);
 		window.setLocation(200,100);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		String[] columnNames = { "OrderDate", "Region", "Rep1", "Rep2", "Item", "Units", "UnitCost", "Total"}; 
-		String[][] data = readCSV.getDataArray();
-		//String[][] data = {{"placeholder", "placeholder", "placeholder", "placeholder", "placeholder", "placeholder", "placeholder", "placeholder"}};
+		data = readCSV.getDataArray();
 		
 		model = new DefaultTableModel(data, columnNames);
 		table = new JTable(model);
 		table.setBounds(30, 40, 200, 300);
+		table.setAutoCreateRowSorter(true);
 		JScrollPane scrollPane = new JScrollPane(table);
 		
 		JPanel btnPanel = new JPanel();
 		btnPanel.setLayout( new FlowLayout(FlowLayout.TRAILING));
-		btnPanel.add(sortButton, BorderLayout.PAGE_START);
-		btnPanel.add(addButton, BorderLayout.PAGE_END);
+		btnPanel.add(addButton, BorderLayout.PAGE_START);
+		btnPanel.add(saveButton, BorderLayout.PAGE_END);
 		
 		window.add(scrollPane, BorderLayout.PAGE_START);
 		window.add(btnPanel, BorderLayout.PAGE_END);
@@ -59,9 +60,17 @@ public class csv extends JPanel implements ActionListener {
 		if(e.getSource() == addButton) {
 			model.addRow(new Object[]{"", ""});
 		}
-		else if(e.getSource() == sortButton) {
-			
+		else if(e.getSource() == saveButton) {
+			saveCSV.saveMap();
 		}
+	}
+	
+	public static JTable getTable() {
+		return table;
+	}
+	
+	public static String[][] getData(){
+		return data;
 	}
 	
 }
